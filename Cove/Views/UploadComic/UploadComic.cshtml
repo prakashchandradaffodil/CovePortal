@@ -1,0 +1,438 @@
+﻿@using  Cove.Web.Models
+@model UploadComicViewModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Upload Comic";
+}
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" rel="stylesheet" id="chosen-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
+    @*<script src="~/lib/chosen/chosen.proto.js"></script>
+        <script src="~/lib/chosen/chosen.jquery.js"></script>*@
+</head>
+<style>
+    .UploadBtnclass {
+        width: 133px;
+        height: 40px;
+        border-radius: 20px;
+        background-color: #f98f49;
+    }
+
+    .heading-format {
+        width: 132px;
+        height: 21px;
+        font-family: WorkSans;
+        font-size: 18px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #102035;
+        margin-left: 8px;
+    }
+
+    .files input {
+        outline: 2px dashed #92b0b3;
+        outline-offset: -10px;
+        -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+        transition: outline-offset .15s ease-in-out, background-color .15s linear;
+        padding: 120px 0px 85px 35%;
+        text-align: center !important;
+        margin: 0;
+        width: 100% !important;
+    }
+
+        .files input:focus {
+            outline: 2px dashed #92b0b3;
+            outline-offset: -10px;
+            -webkit-transition: outline-offset .15s ease-in-out, background-color .15s linear;
+            transition: outline-offset .15s ease-in-out, background-color .15s linear;
+            border: 1px solid #92b0b3;
+        }
+
+    .files {
+        position: relative
+    }
+
+        .files:after {
+            pointer-events: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            width: 50px;
+            right: 0;
+            height: 56px;
+            content: "";
+            background-image: url(https://image.flaticon.com/icons/png/128/109/109612.png);
+            display: block;
+            margin: 0 auto;
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
+
+    .color input {
+        background-color: #f1f1f1;
+    }
+
+    .files:before {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        pointer-events: none;
+        width: 100%;
+        right: 0;
+        height: 57px;
+        content: "Drag and Drop File to upload";
+        display: block;
+        margin: 0 auto;
+        color: #2ea591;
+        font-weight: 600;
+        text-transform: capitalize;
+        text-align: center;
+    }
+</style>
+
+@*<form enctype="multipart/form-data" asp-controller="UploadComic" asp-action="UploadComic" id="uploadComicForm" method="post" data-ajax="true" data-ajax-update="#uploadComicForm" autocomplete="off">*@
+@using (Html.BeginForm("UploadComic", "UploadComic", FormMethod.Post))
+{
+    <div class="row">
+        <div class="form-group heading-format">
+            <img src="" />Upload Comic
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="form-group files color">
+                        <input type="file" class="form-control" multiple="">
+                        <span asp-validation-for="UploadedFiles" class="text-danger validation_error"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group heading-format">
+            Manage Title
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @*@Html.TextBoxFor(x=>x.Creator,new { })*@
+                    @*<label class="form-check-label" for="txtCreators">Creator(s)</label>
+                        <input type="text" class="form-control" id="Creator" placeholder="Creator(s)">*@
+                    @Html.LabelFor(x => x.Creator, new { @class = "form-check-label" })
+                    @Html.TextBoxFor(x => x.Creator, new { @class = "form-control", @placeholder = "Creator(s)" })
+                    <span asp-validation-for="Creator" class="text-danger validation_error"></span>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @*<label class="form-check-label" for="txtCreators">Series Title</label>
+                        <input type="text" class="form-control" id="SeriesTitle" placeholder="Series Title">*@
+                    @Html.LabelFor(x => x.SeriesTitle, new { @class = "form-check-label" })
+                    @Html.TextBoxFor(x => x.SeriesTitle, new { @class = "form-control", @placeholder = "Series Title", @Id = "SeriesTitle" })
+                    <span asp-validation-for="SeriesTitle" class="text-danger validation_error"></span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @*<label class="form-check-label" for="txtIssuetitle">Issue title</label>
+                        <input type="text" class="form-control" id="IssueTitle" placeholder="Issuetitle">
+                        <span asp-validation-for="IssueTitle" class="text-danger validation_error"></span>*@
+                    @Html.LabelFor(x => x.IssueTitle, new { @class = "form-check-label" })
+                    @Html.TextBoxFor(x => x.IssueTitle, new { @class = "form-control", @placeholder = "Issue title", @Id = "IssueTitle" })
+                    <span asp-validation-for="IssueTitle" class="text-danger validation_error"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    @*<label class="form-check-label" for="txtPrice">Price</label>
+                        <input type="text" class="form-control" id="Price" placeholder="Cost of comic in credits.1 credit = £1/$1.Half credits are accepted, eg 2.5">*@
+                    @Html.LabelFor(x => x.Price, new { @class = "form-check-label" })
+                    @Html.TextBoxFor(x => x.Price, new { @class = "form-control", @placeholder = "Cost of comic in credits.1 credit = £1/$1.Half credits are accepted, eg 2.5", @Id = "Price" })
+                    <span asp-validation-for="Price" class="text-danger validation_error"></span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group  heading-format">
+            Other Detail
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @*<label class="form-check-label" for="txtCreators">Issue Number</label>
+                        <input type="text" class="form-control" id="txtIssueNumber" placeholder="Issue Number">
+                        <span asp-validation-for="IssueNumber" class="text-danger validation_error"></span>*@
+                    @Html.LabelFor(x => x.IssueNumber, new { @class = "form-check-label" })
+                    @Html.TextBoxFor(x => x.IssueNumber, new { @class = "form-control", @id = "IssueNumber", @placeholder = "Issue Number" })
+                    <span asp-validation-for="IssueNumber" class="text-danger validation_error"></span>
+
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="form-check-label" for="radioAgesuitability">Age Suitability</label>
+                </div>
+                <div class="form-group form-check-inline text-monospace">
+                    @*Group of default radios - option 1*@
+                    <!--<div class="custom-control custom-radio ">
+                        <input type="radio" class="custom-control-input" id="radioAgesuitability1" value="All Age" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="radioAgesuitability1">All Age</label>
+                    </div>-->
+                    @*Group of default radios - option 2*@
+                    <!--<div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="radioAgesuitability2" value="Teen and Up" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="radioAgesuitability2">Teen and Up</label>
+                    </div>-->
+                    @*Group of default radios - option 3*@
+                    <!--<div class="custom-control custom-radio">
+                        <input type="radio" class="custom-control-input" id="radioAgesuitability3" value="Adult" name="groupOfDefaultRadios">
+                        <label class="custom-control-label" for="radioAgesuitability3">Adult</label>
+                    </div>
+                    <span asp-validation-for="selectedAgeSuitability" class="text-danger validation_error"></span>
+                     Html.HiddenFor(x => x.selectedAgeSuitability, new { id = "hdnselectedAgeSuitability" })
+                     -->
+                    @if (Model.AgeSuitabilityListRBL != null)
+                    {
+                        @foreach (var agesuitability in Model.AgeSuitabilityListRBL)
+                        {
+                            @Html.RadioButtonFor(model => model.selectedAgeSuitability, agesuitability.Value) @agesuitability.Text; @:&nbsp;&nbsp;&nbsp;
+                        }
+                    }
+                    <span asp-validation-for="selectedAgeSuitability" class="text-danger validation_error"></span>
+
+                    <br />
+                </div>
+            </div>
+        </div><br />
+        <div class="row">
+            <div class="form-group">
+                @*<label class="form-check-label heading-format" for="Description">Description</label>*@
+                @Html.LabelFor(x => x.Description, "Description", new { @class = "form-check-label heading-format" })
+            </div>
+            @*<textarea class="form-control" aria-label="With textarea" placeholder="Maximum length 1000 charecter"></textarea>*@
+            @Html.TextAreaFor(x => x.Description, new { @class = "form-control with textarea", @placeholder = "Maximum length 1000 charecter" })
+            <span asp-validation-for="Description" class="text-danger "></span>
+        </div><br />
+        <div class="row">
+            <div class="form-group  heading-format">
+                Gener
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.DropDownListFor(m => m.SelectedGenerFiction, Model.FictionListDDL, new { @class = "custom-select", @data_placeholder = "Fiction", @Id = "fiction", multiple = "multiple" })
+                @*@Html.ListBox("Fiction", Model.FictionListDDL, new { @Id = "fiction", @data_placeholder = "Fiction", @class = "custom-select" })*@
+                @*<select class="custom-select" id="fiction" data-placeholder="Fiction" multiple>
+                        <option value="1">Action</option>
+                        <option value="2">Chick List</option>
+                        <option value="3">Classics</option>
+                        <option value="4">Crime</option>
+                        <option value="5">Detective</option>
+                        <option value="6">Drama</option>
+                    </select>*@
+                @Html.HiddenFor(x => x.SelectedGenerFiction, new { @id = "hdnGenerFiction" })
+                <script>
+                    $('#fiction').chosen()
+                </script>
+            </div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(m => m.SelectedGenerNonFiction, Model.NonFictionListDDL, new { @class = "custom-select", @data_placeholder = "Non-Fiction", @Id = "nonfiction", multiple = "multiple" })
+                @*@Html.ListBox("Non-Fiction", Model.NonFictionListDDL, new { @Id = "nonfiction", @data_placeholder = "Non-Fiction", @class = "custom-select" })*@
+                @*<select class="custom-select" id="nonFiction" multiple>
+                        <option value="" selected disabled>Non-Fiction</option>
+                        <option value="1"> Art</option>
+                        <option value="2">Autobiography</option>
+                        <option value="3">Biography</option>
+                        <option value="4">Health/Fitness</option>
+                        <option value="5">History</option>
+                        <option value="6">Home & Garden</option>
+                        <option value="6">12 More (total 18 option) </option>
+                    </select>*@
+                @Html.HiddenFor(x => x.SelectedGenerNonFiction, new { @id = "hdnSelectedGenerNonFiction" })
+                <script>
+                    $('#nonfiction').chosen()
+                </script>
+            </div>
+            <span asp-validation-for="SelectedGenerNonFiction" class="text-danger validation_error"></span>
+        </div> <br />
+        <div class="row">
+            <div class="form-group  heading-format">
+                Tags
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @Html.DropDownListFor(m => m.SelectedTagContentWarning, Model.TagContentWarningListDDL, new { @class = "custom-select", @data_placeholder = "Content Warnings", @Id = "contentWarning", multiple = "multiple" })
+                @*@Html.ListBox("Content Warnings", Model.TagContentWarningListDDL, new { @Id = "contentWarning", @data_placeholder = "Content Warnings", @class = "custom-select" })*@
+                @*<select class="custom-select" multiple>
+                        <option value="" selected disabled>Content Warnings</option>
+                        <option value="1">Blasphemy</option>
+                        <option value="2"> Character Death</option>
+                        <option value="3">Explicit</option>
+                        <option value="4">Many more total 11 content warning</option>
+                    </select>*@
+                @Html.HiddenFor(x => x.SelectedTagContentWarning, new { @id = "hdnSelectedTagContentWarning" })
+                <script>
+                    $('#contentWarning').chosen()
+                </script>
+                <span asp-validation-for="SelectedTagContentWarning" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                @Html.DropDownListFor(m => m.SelectedTagTypes, Model.TagTypesListDDL, new { @class = "custom-select", @data_placeholder = "Type", @Id = "tagType", multiple = "multiple" })
+                @*@Html.ListBox("Type", Model.TagTypesListDDL, new { @Id = "tagType", @data_placeholder = "Type", @class = "custom-select" })*@
+
+                @*<select class="custom-select" multiple>
+                        <option value="" selected disabled>Type</option>
+                        <option value="1">Stand alonea</option>
+                        <option value="2"> Mini Series</option>
+                        <option value="3"> Ongoing Story</option>
+                        <option value="4"> Anthology</option>
+                        <option value="5">Graphic Novel</option>
+                        <option value="6">Collection </option>
+                        <option value="7">Manga </option>
+                    </select>*@
+                @Html.HiddenFor(x => x.SelectedTagTypes, new { @id = "hdnSelectedTagTypes" })
+                <script>
+                    $('#tagType').chosen()
+                </script>
+                <span asp-validation-for="SelectedTagTypes" class="text-danger validation_error"></span>
+            </div>
+        </div>
+
+
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="form-group  heading-format">
+            Attach Thumbnail
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 thumbNailContainer">
+            <div class="form-group">
+                <img src="http://i.imgur.com/Ym35iJI.jpg" alt="frontend" style="width:73px; height:73px;" />
+            </div>
+        </div>
+        <div class="col-md-1 thumbNailContainer">
+            <div class="form-group">
+                <a onclick="AddThumbnail()"><img src="/common/images/add.png" class="AddButtonShape background-size: cover" id="" /></a>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group form-check">
+                @Html.CheckBoxFor(x => x.isPublishMyComic, new { id = "isPublishMyComic", name = "isPublishMyComic" })
+                @*<input type="checkbox" class="form-check-input input-field-label" style=" margin-left:-65px ;color:#f98f49" id="isPublishMyComic">*@
+                I would like a representative to contact me to discuss publishing my comic on <a href="http://getmycomics.com">Get My Comics</a>
+                @Html.HiddenFor(x => x.isPublishMyComic, new { @id = "hdnisPublishMyComic" })
+
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <button type="reset" class="UploadBtnclass">Cancel</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <button type="submit" class="UploadBtnclass" id="submitUploadComicsButton">Upload</button>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        //jQuery.validator.unobtrusive.parse();
+        //jQuery.validator.unobtrusive.parse("#uploadComicForm");
+        $("#submitUploadComicsButton").click(function (event) {
+            ////debugger
+            //$('#hdnGenerFiction').val($("#fiction").val());
+            //$('#hdnSelectedGenerNonFiction').val($("#nonfiction").val());
+            //$('#hdnSelectedTagContentWarning').val($("#contentWarning").val());
+            //$('#hdnSelectedTagTypes').val($("#tagType").val());
+            //$('#hdnisPublishMyComic').val($("#isPublishMyComic").val());
+            //$('#Role').val("Creator")
+
+        });
+
+        $('#fiction').change(function () {
+            $('#nonfiction').prop('disabled', true);
+            //$('#nonfiction').prop('disabled', false);
+            //}
+            //if ("#fiction_chosen") {
+            //    $('#fiction_chosen').prop('disabled', true);
+            //} else {
+            //    $('#fiction_chosen').prop('disabled', false);
+            //}
+        });
+        $('#nonfiction').change(function () {
+            $('#fiction').prop('disabled', true);
+        });
+        /*check box value enable disable set in post*/
+        $(document).on("click", "[type='checkbox']", function (e) {
+            if (this.checked) {
+                $(this).attr("value", "true");
+            } else {
+                $(this).attr("value", "false");
+            }
+        });
+
+
+
+        $('#nonfiction').change(function () {
+            if (this.value) {
+                $("#fiction").prop("disabled", true);
+            }
+        });
+
+        $("#fiction").change(function () {
+
+            if ($(this).val()) {
+                $("#nonfiction").attr("disabled", "disabled")
+            } else {
+                $("#nonfiction").removeAttr("disabled");
+                $("#nonfiction").focus();
+            }
+        });
+
+
+
+
+        //if (("#IssueTitle").val() == null && ("#SeriesTitle").val() == null) {
+        //if either is blank then ask to enter any one and if exists any one then move ahead.
+
+        //}
+
+
+  
+
+
+
+
+
+</script>
+

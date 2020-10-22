@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>The Cove</title>
+    @*<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href="~/lib/bootstrap-multiselect/css/bootstrap-multiselect.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/css/bootstrap-select.css">
+    <link rel="stylesheet" href="~/common/css/style.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.js"></script>
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.8.1/js/bootstrap-select.js"></script>
+    @*<script src="~/lib/bootstrap-multiselect/js/bootstrap-multiselect.js"></script>*@
+</head>
+<body>
+    <div class="layout">
+        <div class="tile">
+            <div class="left-section">
+                <div class="book"></div>
+                <span class="welcome-to-cove">Welcome to The Cove</span>
+            </div>
+            <div class="login-right-section">
+                @RenderBody()
+            </div>
+            <div id="loader"></div>
+        </div>
+    </div>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,39 @@
+﻿<div class="login-signup-right">
+    <div class="login-signup">
+        <div class="login-signup-options" style=" margin-right: 15px;">
+            <a class="login-signup-text" asp-action="Login">Login</a>
+        </div>
+        <div class="login-signup-options">
+            <a class="login-signup-text" asp-action="Register">Signup</a>
+                @*<select id="signup-options">
+                    <option value="">Signup</option>
+                    <option class="login-signup-text" value="reader">
+                        Signup as Reader
+                    </option>
+                    <option class="login-signup-text" value="creator">Signup as Creator</option>
+                </select>*@
+        </div>
+    </div>
+    <div class="external-login">
+        <span class="external-login-providers-text">OR LOGIN WITH</span>
+        <div class="external-login-providers">
+            <a class="facebook" href="@Url.Action("ExternalLoginProvider","Account",new { provider="Facebook"})"></a>
+            <a class="google" href="@Url.Action("ExternalLoginProvider","Account",new { provider="Google"})"></a>
+        </div>
+    </div>
+    <div>@Html.ActionLink("Upload Comic", "UploadComic", "UploadComic", null, new { id = "" })</div>
+</div>
+
+<script>
+    $("#signup-options").change(function (data) {
+        console.log(data);
+        var signup = $("#signup-options").val();
+        console.log(signup);
+        if (signup == "reader") {
+            window.location.href = "/Account/Register?RegisterFormType=Reader";
+        }
+        if (signup == "creator") {
+            window.location.href = "/Account/Register?RegisterFormType=Creator";
+        }
+    });
+</script>

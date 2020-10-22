@@ -1,0 +1,436 @@
+﻿@using Cove.Web.ViewModels
+
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Sign Up Reader";
+}
+<div class="register-rectangle">
+    <div class="login-rectangle-content">
+        @*@if (ViewBag.RegisterFormType == "Reader")
+        {*@
+            <span class="login-text">Sign Up</span>
+        @* }s *@
+        @*else
+        {
+            <span class="login-text">Sign Up Creator</span>
+        }*@
+        <div class="row">
+            <div class="col-md-4">
+                <section>
+                    <form enctype="multipart/form-data" asp-controller="Account" asp-action="Register" id="registerForm" method="post" data-ajax="true" data-ajax-update="#registerForm" data-ajax-mode="replace" autocomplete="off">
+                        <hr class="line">
+                        <div class="form-group">
+                            <div>
+                                <label>Signup As</label>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio"
+                                           class="custom-control-input"
+                                           id="reader"
+                                           value="reader"
+                                           name="signup-option"
+                                           checked />
+                                    <label class="custom-control-label" for="reader">Reader</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio"
+                                           class="custom-control-input"
+                                           id="creator"
+                                           value="creator"
+                                           name="signup-option"
+                                            />
+                                    <label class="custom-control-label" for="creator">Creator</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input asp-for="Role" id="Role" name="Role" value="Reader" style="display:none" />
+
+                        <div class="form-group">
+                            <label asp-for="FirstName" class="input-field-label"></label>
+                            <input asp-for="FirstName" id="FirstName" placeholder="First Name" class="input-field" />
+                            <span asp-validation-for="FirstName" class="text-danger validation_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="LastName" class="input-field-label"></label>
+                            <input asp-for="LastName" id="LastName" placeholder="Last Name" class="input-field" />
+                            <span asp-validation-for="LastName" class="text-danger validation_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email" class="input-field-label"></label>
+                            @if (Model.Email != null)
+                            {
+                                <input asp-for="Email" id="Email" placeholder="Email Address" class="input-field" readonly />
+                            }
+                            else
+                            {
+                                <input asp-for="Email" id="Email" placeholder="Email Address" class="input-field" />
+                            }
+                            <span asp-validation-for="Email" class="text-danger validation_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="input-field-label"></label>
+                            <input asp-for="Password" title="Password must be 8 character long including one special character, one number and one character" id="Password" placeholder="Password" class="input-field" />
+                            <span asp-validation-for="Password" class="text-danger validation_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DateOfBirth" class="input-field-label"></label>
+                            <input id="DateOfBirth" autocomplete="off" asp-for="DateOfBirth" class="input-field" />
+                            <span asp-validation-for="DateOfBirth" class="text-danger validation_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Phone" class="input-field-label"></label>
+                            <input asp-for="Phone" id="Phone" class="input-field" />
+                            <span asp-validation-for="Phone" class="text-danger validation_error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Address" class="input-field-label"></label>
+                            <input asp-for="Address" id="Address" placeholder="Address" class="input-field" />
+                            <span asp-validation-for="Address" class="text-danger validation_error"></span>
+                        </div>
+
+                        <div id="creatorFields" style="display:none">
+                            <div class="form-group">
+                                <label asp-for="Profile" class="input-field-label"></label>
+                                <input asp-for="Profile" id="Profile" placeholder="Profile" class="input-field" />
+                                <span asp-validation-for="Profile" id="Profile-Error" class="text-danger validation_error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Specialisations" class="input-field-label"></label>
+
+                                <select asp-for="Specialisations" id="Specialisations" class="custom-select input-field" multiple>
+                                    @foreach (var sep in ViewBag.Specialisation)
+                                    {
+                                        <option value="@sep">@sep</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="Specialisations" id="Specialisations-Error" class="text-danger validation_error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Files" class="input-field-label custom-file-label"></label>
+                                <input asp-for="Files" id="Files" multiple class="input-field custom-file-input" />
+                                <span asp-validation-for="Files" id="Files-Count-Error" class="text-danger validation_error"></span>
+                                <span asp-validation-for="Files" id="Files-Size-Error" class="text-danger validation_error"></span>
+                                <span asp-validation-for="Files" id="Files-Type-Error" class="text-danger validation_error"></span>
+                                <div id="FilesUploaded">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Links" class="input-field-label"></label>
+                                <div>
+                                    <input asp-for="Links" id="Links" placeholder="Add Links" class="input-field" />
+                                    <a style="float:right" onclick="AddLink()"><img src="/common/images/add.png" /></a>
+                                </div>
+                                <span asp-validation-for="Links" id="LinkError" class="text-danger validation_error"></span>
+                                <div>
+                                    <input id="AllLinks" class="input-field" readonly/>
+                                    <span id="AllLinksError" class="text-danger validation_error"></span>
+                                    <span id="AllLinksCountError" class="text-danger validation_error"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="login-button" style="text-align:center">
+                            <button type="submit" id="btnSaveRegister" class="btn btn-primary login-text-white button" style="margin-left:0%">Sign Up</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+            <div class="login-label-14 footer-register-page">
+                <span>Already a member?</span>
+                <a asp-action="Login" style="color:#2c34aa">Login</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+
+<script>
+    var storedFiles=new Array();
+    var storedIFormFiles;
+
+    function isUrlValid(url) {
+        //return /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i.test(url);
+        return /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/.test(url);
+    }
+
+    function AddLink() {
+        var linkInput = $('#Links').val();
+        if (!isUrlValid(linkInput)) {
+            $("#LinkError").text("Invalid link");
+            return;
+        } else {
+            $("#LinkError").text("");
+            //add link in span
+            var links = $('#AllLinks').val();
+            if (links != "") {
+                var add = links + "," + linkInput;
+            } else {
+                var add = linkInput;
+            }
+            $('#AllLinks').val(add);
+        }
+    }
+
+
+    function Delete(index) {
+        console.log(index);
+        $('#file' + index).remove();
+        storedFiles[index] = null;
+    }
+
+        var i = 0;
+        $('.custom-file-input').on("change", function () {
+            //var filename = $(this).val().split("\\").pop();
+            //$(this).next('.custom-file-label').html(filename);
+            var fileLabel = $(this).next('.custom-file-label');
+            var files = $(this)[0].files;
+            //if (files.length > 1) {
+            //    fileLabel.html(files.length + ' Files Selected');
+            //} else if (files.length == 1) {
+            //    fileLabel.html(files[0].name);
+            //}
+            var totalFiles = $(this);
+            console.log(totalFiles[0].files);
+            for (var j = 0; j < totalFiles[0].files.length; j++) {
+                if (!(totalFiles[0].files[j].type.includes("pdf") || totalFiles[0].files[j].type.includes("png")
+                    || totalFiles[0].files[j].type.includes("jpg"))) {
+                    $('#Files-Type-Error').text("Only jpg,png,pdf formats are allowed");
+                    return;
+                } else {
+                    $('#Files-Type-Error').text("");
+                }
+            }
+
+            for (var j = 0; j < totalFiles[0].files.length; j++) {
+                if ((totalFiles[0].files[j].size / 1024 / 1024) > 5) {
+                    $('#Files-Size-Error').text("Maximum file size allowed is 5Mb");
+                    return;
+                } else {
+                    $('#Files-Size-Error').text("");
+                }
+            }
+
+            if (totalFiles[0].files.length > 30) {
+                $('#Files-Count-Error').text("Maximum upload samples allowed are 30");
+                return;
+            } else {
+                $('#Files-Count-Error').text("");
+            }
+
+            //$("#FilesUploaded").empty();
+
+
+            //////debugger
+            for (var j = 0; j < totalFiles[0].files.length; j++) {
+                var uploadedFiles = document.createElement('DIV');
+                uploadedFiles.innerHTML = Dynamic();
+                document.getElementById("FilesUploaded").appendChild(uploadedFiles);
+                $('#file' + i + 'Name').text(totalFiles[0].files[j].name);
+                i++;
+            }
+            //debugger
+            storedIFormFiles = totalFiles[0].files;
+            storedFiles = storedFiles.concat(Array.from(totalFiles[0].files));
+        });
+
+    function Dynamic() {
+        var a = '<div id="file' + i + '"><span id="file' + i + 'Name"></span><a onclick="Delete(' + i +')" style="float:right"><img src="/common/images/delete.png" /></a><br /><br /></div>';
+        return a;
+    }
+
+</script>
+
+<script type="text/javascript">
+    var jq = $.noConflict();
+    jq(document).ready(function () {
+        $("#DateOfBirth").datepicker();
+    })
+
+
+
+    function checkValidations() {
+        var flag = true;
+        var spec = $('#Specialisations').val();
+        if (spec.length==0) {
+            $("#Specialisations-Error").text("Please enter Specialisation");
+            flag = false;
+        } else {
+            $("#Specialisations-Error").text("");
+        }
+
+        var links = $('#AllLinks').val();
+        var alllinks = links.split(",");
+        //////debugger
+        if (links != "" && alllinks.length != 0) {
+            for (var j = 0; j < alllinks.length; j++) {
+                if (!isUrlValid(alllinks[j])) {
+                    $("#AllLinksError").text("Invalid link");
+                    flag = false;
+                } else {
+                    $("#AllLinksError").text("");
+                }
+            }
+        } else {
+            $("#AllLinksError").text("");
+        }
+
+        if (alllinks.length > 30) {
+            $("#AllLinksCountError").text("Maximum links allowed are 30");
+            flag = false;
+        } else {
+            $("#AllLinksCountError").text("");
+        }
+
+        console.log('Checking...');
+        //////debugger
+        return flag;
+    }
+
+       $(document).ready(function () {
+           jQuery.validator.unobtrusive.parse();
+           jQuery.validator.unobtrusive.parse("#registerForm");
+
+           $("#btnSaveRegister").click(function (event) {
+
+               if ($('#creator').is(':checked')) { //Creator
+
+                   if ($("#registerForm").valid()) {
+                       console.log('here2');
+                       event.preventDefault();
+                       submitRegisterForm();
+                   }
+                   //if (checkValidations()) {
+                   //    submitRegisterForm();
+                   //} else {
+                   //    //submitRegisterForm();
+                   //    return;
+                   //}
+               } else {
+                   //event.preventDefault();
+                   //submitRegisterForm();
+               }
+           });
+
+        function submitRegisterForm() {
+            //if ($("#registerForm").valid()) {
+                var $this = $("#registerForm");
+                var frmValues = $this.serialize();
+                var role;
+                if ($('#reader').is(':checked')) { //Reader
+                    role = "Reader";
+                    var registerModel = {
+                        Role: role,
+                        FirstName: $("#FirstName").val(),
+                        LastName: $("#LastName").val(),
+                        Email: $("#Email").val(),
+                        Password: $("#Password").val(),
+                        Phone: $("#Phone").val(),
+                        Address: $("#Address").val(),
+                    };
+                } else { //Creator
+                    role = "Creator";
+                    ////////debugger
+                    //for (var j = 0; j < storedIFormFiles.length; j++) {
+                    //    for (var k = 0; k < storedFiles.length; k++) {
+                    //        if (storedIFormFiles[j].name == storedFiles[k].name) {
+                    //        }
+                    //    }
+                    //}
+                    if (storedFiles != undefined) {
+                        var files = new FormData();
+                        for (var j = 0; j < storedFiles.length; j++) {
+                            files.append("file", storedFiles[j]);
+                        }
+                    }
+
+                    console.log("Here");
+                    var registerModel = {
+                        Role: role,
+                        FirstName: $("#FirstName").val(),
+                        LastName: $("#LastName").val(),
+                        Email: $("#Email").val(),
+                        Password: $("#Password").val(),
+                        Phone: $("#Phone").val(),
+                        Address: $("#Address").val(),
+                        Specialisations: $("#Specialisations").val(),
+                        //Files: files,
+                        Links: $("#Links").val().split(","),
+                        Profile: $("#Profile").val()
+                    };
+
+            }
+            console.log("Submitting...");
+            if (storedFiles != undefined) {
+                var files = new FormData();
+                for (var j = 0; j < storedFiles.length; j++) {
+                    files.append("file", storedFiles[j]);
+                }
+            }
+
+            //call these two ajax calls on submit form
+            //files ajax call(return asset id to register control and add entry in mapping table)
+            //then register ajax call 
+            ////debugger
+            $.ajax({
+                type: "post",
+                url: "/Account/UploadFile",
+                data: files,
+                processData: false,
+                contentType: false,
+                async:false
+            }).done(function (data) {
+
+                console.log(data);
+                registerModel.AssetIds = data;
+
+                ////debugger
+                $.ajax({
+                    type: "post",
+                    url: "/Account/Register",
+                    data: registerModel
+                }).done(function (data) {
+                    console.log(data);
+                    location.href = "https://localhost:44337/Home/Index";
+                    ////debugger
+                });
+
+            });
+                //$.ajax({
+                //    type: $this.attr('method'),
+                //    url: $this.attr('action'),
+                //    data: registerModel
+                //    //processData:false
+                //    //contentType:false
+                //})
+                //    .done(function () {
+                //    })
+                //    .fail(function (data) {
+                //    });
+
+           }
+
+           $('input[type=radio][name=signup-option]').change(function () {
+               if (this.value == 'reader') {
+                   $("#creatorFields").css("display", "none");
+                   $("#Role").val("Reader");
+               }
+               else if (this.value == 'creator') {
+                   $("#creatorFields").css("display", "inline");
+                   $("#Role").val("Creator");
+               }
+           });
+
+           $('#registerForm').keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                submitRegisterForm();
+            }
+        });
+
+    });
+</script>
+

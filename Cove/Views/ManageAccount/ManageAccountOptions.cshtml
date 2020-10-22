@@ -1,0 +1,37 @@
+﻿<div class="row">
+    <div class="col-md-4">
+        <div class="account-image"></div>
+        <ul style="display:inline;text-align:center;">
+            <li class="active manage-account-tabs">@Html.ActionLink("Account Details", "ManageAccountOptions", "ManageAccount")</li>
+            <li class="manage-account-tabs">@Html.ActionLink("Change Password", "ChangePassword", "ManageAccount")</li>
+            <li class="manage-account-tabs">@Html.ActionLink("Log Out", "Logout", "Account")</li>
+        </ul>
+    </div>
+    <div class="col-md-8 account-side" id="right-content">
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadTable();
+    });
+    var msg = '@ViewBag.Message';
+    //debugger
+    setInterval(function () {
+        if (msg!= null && msg!="") {
+            alert(msg);
+            msg = "";
+        }
+    }, 1000);
+    function loadTable() {
+        $.get("/ManageAccount/AccountDetails", function (data) {
+            if (data) {
+                console.log(data);
+                $("#right-content").html(data);
+            }
+        }).fail(function (data) {
+
+        });
+    }
+</script>

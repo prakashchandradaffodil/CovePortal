@@ -1,0 +1,331 @@
+﻿@using Cove.Web.ViewModels
+
+@model RegisterViewModel
+    <style>
+        .input-field {
+            width: 340px;
+        }
+    </style>
+
+    <form enctype="multipart/form-data" asp-controller="ManageAccount" asp-action="EditAccountDetails" id="editForm" method="post" data-ajax="true" data-ajax-update="#editForm" data-ajax-mode="replace" autocomplete="off">
+
+        <div class="account-side-head">
+            <span class="account-text-18" style="flex:1;">Account Details</span>
+            <div style="margin-left:70%;display:contents;">
+                <a href="#" onclick="EditDetails()" id="edit-icon">
+                    <div class="edit-image"></div>
+                    <span class="account-text-18">Edit</span>
+                </a>
+                <a href="#" onclick="Cancel()" style="display:none" class="cancel-btn"><span class="cancel-btn-text">Cancel</span></a>
+                @*<a href="#" onclick="Save()" style="display:none" class="save-btn"><span class="save-btn-text">Save</span></a>*@
+                <div class="save-btn" style="text-align:center;display:none;">
+                    <button type="submit" id="btnEditForm" class="btn btn-primary login-text-white button" style="margin-left:0%">Save</button>
+                </div>
+            </div>
+        </div>
+       
+
+        <div class="account-side-body">
+            <div class="account-side-body-field">
+                <span class="account-text-16">Name</span><br />
+                <span class="account-text-12 binded-value">@Model.FirstName @Model.LastName</span>
+                <hr class="edit-value" />
+                <div class="form-group" style="display:table-cell">
+                    <input asp-for="FirstName" id="FirstName" placeholder="First Name" style="display:none;margin-right:10px;" class="input-field edit-value" />
+                    <span asp-validation-for="FirstName" class="text-danger validation_error edit-value-error"></span>
+                </div>
+                <div class="form-group" style="display:table-cell">
+                    <input asp-for="LastName" id="LastName" placeholder="Last Name" style="display:none" class="input-field edit-value" />
+                    <span asp-validation-for="LastName" class="text-danger validation_error edit-value-error"></span>
+                </div>
+            </div>
+            <div class="account-side-body-field">
+                <span class="account-text-16">Email Address</span><br />
+                <span class="account-text-12 binded-value">@Model.Email</span>
+                @*<div class="form-group">*@
+                <hr class="edit-value" />
+                <input asp-for="Email" id="Email" placeholder="Email Address" style="display:none" class="input-field edit-value" />
+                <span asp-validation-for="Email" class="text-danger validation_error edit-value-error"></span>
+                @*</div>*@
+            </div>
+
+            <div class="account-side-body-field">
+                <span class="account-text-16">Phone</span><br />
+                <span class="account-text-12 binded-value">@Model.Phone</span>
+                @*<div class="form-group">*@
+                <hr class="edit-value" />
+                <input asp-for="Phone" id="Phone" style="display:none" class="input-field edit-value" />
+                <span asp-validation-for="Phone" class="text-danger validation_error edit-value-error"></span>
+                @*</div>*@
+            </div>
+
+            <div class="account-side-body-field">
+                <span class="account-text-16">Address</span><br />
+                <span class="account-text-12 binded-value">@Model.Address</span>
+                @*<div class="form-group">*@
+                <hr class="edit-value" />
+                <input asp-for="Address" id="Address" placeholder="Address" style="display:none" class="input-field edit-value" />
+                <span asp-validation-for="Address" class="text-danger validation_error edit-value-error"></span>
+                @*</div>*@
+            </div>
+
+            <input asp-for="Role" id="Role" name="Role" value="@Model.Role" style="display:none" />
+            <input asp-for="Password" id="Password" name="Password" value="Manjul@12345" style="display:none" />
+
+
+            @if (Model.Role == "Creator")
+            {
+        <div class="account-side-body-field">
+            <span class="account-text-16">Profile</span><br />
+            <span class="account-text-12 binded-value">@Model.Profile</span>
+            <hr class="edit-value" />
+            <input asp-for="Profile" id="Profile" placeholder="Profile" style="display:none" class="input-field edit-value" />
+            <span asp-validation-for="Profile" id="Profile-Error" class="text-danger validation_error edit-value-error"></span>
+        </div>
+
+        <div class="account-side-body-field">
+            <span class="account-text-16">Previous Projects</span><br />
+            <hr class="edit-value" />
+                <input asp-for="Files" id="Files" multiple style="display:none;opacity:initial;" class="input-field custom-file-input edit-value" />
+                <span asp-validation-for="Files" id="Files-Count-Error" class="text-danger validation_error edit-value-error"></span>
+                <span asp-validation-for="Files" id="Files-Size-Error" class="text-danger validation_error edit-value-error"></span>
+                <span asp-validation-for="Files" id="Files-Type-Error" class="text-danger validation_error edit-value-error"></span>
+           
+            <input asp-for="UploadedFiles" id="UploadedFiles" style="display:none;"/>
+            <div id="FilesUploaded">
+            </div>
+        </div>
+        <div class="account-side-body-field">
+            <span class="account-text-16">Specialisation(s)</span><br />
+            <span class="account-text-12 binded-value">@string.Join(",", Model.Specialisations)</span>
+            <hr class="edit-value" />
+            <select asp-for="Specialisations" id="Specialisations" style="display:none;" class="custom-select input-field edit-value" multiple>
+                @foreach (var sep in ViewBag.Specialisation)
+                {
+                    <option value="@sep">@sep</option>
+                }
+            </select>
+            <span asp-validation-for="Specialisations" id="Specialisations-Error" class="text-danger validation_error edit-value-error"></span>
+
+        </div>
+            }
+        </div>
+        </form>
+
+
+    <script>
+        var storedFiles = new Array();
+        var storedIFormFiles;
+        var initialFiles = new Array();
+        var initialFilesLength=0;
+        var uploadedChangedFiles=new Array();
+        var i = 0;
+        $(document).ready(function () {
+            SetInitialFiles();
+        });
+
+        function SetInitialFiles() {
+            $("#FilesUploaded").empty();
+            //debugger
+            if ($('#UploadedFiles').val() != "" && $('#UploadedFiles').val()!=undefined) {
+                var files = $('#UploadedFiles').val().split(",");
+
+                if (files.length != 0) {
+                    initialFilesLength = files.length;
+                    uploadedChangedFiles = files;
+                }
+                for (var j = 0; j < files.length; j++) {
+                    var uploadedFiles = document.createElement('DIV');
+                    uploadedFiles.innerHTML = Dynamic();
+                    document.getElementById("FilesUploaded").appendChild(uploadedFiles);
+                    var index = files[j].indexOf("_") + 1;
+                    $('#file' + i + 'Name').text(files[j].substring(index));
+                    i++;
+                }
+            }
+        }
+
+
+        $('.custom-file-input').on("change", function () {
+            var totalFiles = $(this);
+            console.log(totalFiles[0].files);
+
+            //debugger
+            for (var j = 0; j < totalFiles[0].files.length; j++) {
+                if (!(totalFiles[0].files[j].type.includes("pdf") || totalFiles[0].files[j].type.includes("png")
+                    || totalFiles[0].files[j].type.includes("jpg"))) {
+                    $('#Files-Type-Error').text("Only jpg,png,pdf formats are allowed");
+                    return;
+                } else {
+                    $('#Files-Type-Error').text("");
+                }
+            }
+
+            for (var j = 0; j < totalFiles[0].files.length; j++) {
+                if ((totalFiles[0].files[j].size / 1024 / 1024) > 5) {
+                    $('#Files-Size-Error').text("Maximum file size allowed is 5Mb");
+                    return;
+                } else {
+                    $('#Files-Size-Error').text("");
+                }
+            }
+
+            if (totalFiles[0].files.length > 30) {
+                $('#Files-Count-Error').text("Maximum upload samples allowed are 30");
+                return;
+            } else {
+                $('#Files-Count-Error').text("");
+            }
+
+
+            for (var j = 0; j < totalFiles[0].files.length; j++) {
+                var uploadedFiles = document.createElement('DIV');
+                uploadedFiles.innerHTML = Dynamic();
+                document.getElementById("FilesUploaded").appendChild(uploadedFiles);
+                $('#file' + i + 'Name').text(totalFiles[0].files[j].name);
+                i++;
+            }
+            storedIFormFiles = totalFiles[0].files;
+            storedFiles = storedFiles.concat(Array.from(totalFiles[0].files));
+        });
+
+
+        function Download(index) {
+            var file = $('#UploadedFiles').val().split(",")[index];
+            var obj = { filename: file };
+            $.ajax({
+                type: "get",
+                url: "/ManageAccount/Download",
+                data: obj
+            }).done(function (data) {
+                window.location.href = "/ManageAccount/Download?filename=" + file;
+            });
+        }
+
+        function Delete(index) {
+            console.log(index);
+            $('#file' + index).remove();
+            //debugger
+            if (uploadedChangedFiles.length != 0 && index >= 0 && index < uploadedChangedFiles.length) {
+                uploadedChangedFiles.splice(index, 1);
+            } else {
+                storedFiles.splice(storedFiles.length - (i - index),1);
+            }
+        }
+ 
+        function Dynamic() {
+            var a = '<div id="file' + i + '"><span ><a onclick="Download(' + i + ')" id="file' + i + 'Name"></a></span><a onclick="Delete(' + i + ')" style="float:right"><img src="/common/images/delete.png" /></a><br /><br /></div>';
+            return a;
+        }
+
+            function EditDetails() {
+                $("#edit-icon").css("display", "none");
+                //$(".binded-value").css("display", "none");
+                $(".edit-value").css("display", "block");
+                $(".edit-value-error").css("display", "inline");
+
+
+                $(".cancel-btn").css("display", "inline");
+                $(".save-btn").css("display", "inline");
+
+            }
+
+            function Cancel() {
+                $("#edit-icon").css("display", "inline");
+                $(".cancel-btn").css("display", "none");
+                $(".save-btn").css("display", "none");
+
+                //$(".binded-value").css("display", "inline");
+                $(".edit-value").css("display", "none");
+                $(".edit-value-error").css("display", "none");
+
+            }
+
+
+        $(document).ready(function () {
+            jQuery.validator.unobtrusive.parse();
+            jQuery.validator.unobtrusive.parse("#editForm");
+
+            $("#btnEditForm").click(function (event) {
+                if ($('#editForm').valid()) {
+                var role = $("#Role").val();
+                if (role == "Creator") {
+                    event.preventDefault();
+                    submitEditForm();
+                }
+                }
+            });
+
+            function submitEditForm() {
+                role = "Creator";
+                if (storedFiles != undefined) {
+                    var files = new FormData();
+                    for (var j = 0; j < storedFiles.length; j++) {
+                        files.append("file", storedFiles[j]);
+                    }
+                }
+
+                console.log("Here");
+                var registerModel = {
+                    Role: role,
+                    FirstName: $("#FirstName").val(),
+                    LastName: $("#LastName").val(),
+                    Email: $("#Email").val(),
+                    Password: $("#Password").val(),
+                    Phone: $("#Phone").val(),
+                    Address: $("#Address").val(),
+                    Specialisations: $("#Specialisations").val(),
+                    //Files: files,
+                    //Links: $("#Links").val().split(","),
+                    Profile: $("#Profile").val()
+                };
+            console.log("Submitting...");
+            if (storedFiles != undefined) {
+                var files = new FormData();
+                for (var j = 0; j < storedFiles.length; j++) {
+                    files.append("file", storedFiles[j]);
+                }
+                }
+
+                if ($('#UploadedFiles').val() != null && $('#UploadedFiles').val() != "") {
+                    initialFiles = $('#UploadedFiles').val().split(",");
+                    for (var j = 0; j < initialFiles.length; j++) {
+                        files.append("initialFiles", initialFiles[j]);
+                }
+                }
+
+                if (uploadedChangedFiles.length!=0) {
+                    for (var j = 0; j < uploadedChangedFiles.length; j++) {
+                        files.append("uploadedChangedFiles", uploadedChangedFiles[j]);
+                }
+            }
+
+            // send initialfiles, storedfiles, $('#UploadedFiles').val()
+                
+
+            $.ajax({
+                type: "post",
+                url: "/ManageAccount/UploadFile",
+                data: files,
+                processData: false,
+                contentType: false,
+                async: false
+            }).done(function (data) {
+
+                console.log(data);
+                registerModel.AssetIds = data;
+
+                $.ajax({
+                    type: "post",
+                    url: "/ManageAccount/EditAccountDetails",
+                    data: registerModel,
+                }).done(function (data) {
+                    console.log(data);
+                    location.href = "https://localhost:44337/ManageAccount/ManageAccountOptions";
+                });
+
+            });
+        }
+            });
+
+    </script>

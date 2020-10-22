@@ -1,0 +1,7 @@
+﻿*.suo
+_ReSharper.*
+/obj
+/packages
+.vs/
+/bin
+/Logs
